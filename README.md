@@ -127,6 +127,8 @@ install extension Rocketseat ReactJS
 
 npm install --save styled-components
 
+npm install --save react react-copy-to-clipboard
+
 yarn add axios
 
 sudo npm install --save react-router-dom
