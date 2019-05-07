@@ -2,24 +2,20 @@ import React, { Component } from 'react';
 import { Table, Button, Input } from 'antd';
 import api from '../../services/api';
 
-import ModalInsertOnDb from '../../components/ModalInsertOnDb';
-import { error, success } from '../../components/ModalMessages';
+import ModalInsertStrikeOnDb from '../../components/ModalInsertStrikeOnDb';
+import { success, error } from '../../components/ModalMessages';
 
 const { Column } = Table;
 const { Search } = Input;
 
 class PriceStrikes extends Component {
   state = {
-    members: [],
     priceStrikes: [],
     visible: false,
-    sapato: false,
     facebookLink: '',
-    priceStrikeSearchResult: [],
   };
 
   componentDidMount() {
-    //    this.loadMembersList();
     this.loadPriceStrikesList();
   }
 
@@ -37,21 +33,25 @@ class PriceStrikes extends Component {
     this.setState({ visible: true });
   };
 
-  modalInsertOnDbCancel = () => {
-    // console.log('Clicked cancel button');
+  modalOnCancel = () => {
     this.setState({ visible: false });
   };
 
-  insertPriceStrikeOnDb = async () => {
-    //  const data =
-    const response = await api.get('/priceStrikes');
-    this.setState({ priceStrikes: response.data });
-  };
+  modalInsertOnDbInsertion = async (name) => {
+    const { facebookLink } = this.state;
+    try {
+      await api.post('/priceStrikes', { name, facebookLink });
+      success();
+    } catch {
+      error();
+    }
 
-  modalInsertOnDbInsertion = () => {
-    if (this.state.sapato) success();
-    else error();
+    // if (this.searchForFacebook()) {
+    //   console.log('TRUE!!!');
+    //   success();
+    // } else error();
     this.setState({ visible: false });
+    this.loadPriceStrikesList();
   };
 
   setFacebookLink = (e) => {
@@ -61,8 +61,12 @@ class PriceStrikes extends Component {
   searchForFacebook = async (link) => {
     const response = await api.get(`/priceStrikes/${link}`);
     this.setState({ priceStrikeSearchResult: response.data });
-    if (response.data.length > 0) console.log('I FOUND IT!!!');
-    else console.log('THERE IS NO ONE!!!');
+    if (response.data.length > 0) {
+      console.log('I FOUND IT!!!');
+      return true;
+    }
+    console.log('THERE IS NO ONE!!!');
+    return false;
   };
 
   render() {
@@ -81,10 +85,10 @@ class PriceStrikes extends Component {
         <Button type="primary" onClick={this.showModal}>
           Add Strike
         </Button>
-        <ModalInsertOnDb
+        <ModalInsertStrikeOnDb
           visible={visible}
           insertData={this.modalInsertOnDbInsertion}
-          closeModal={this.modalInsertOnDbCancel}
+          closeModal={this.modalOnCancel}
           facebookLink={facebookLink}
         />
         <hr />
@@ -93,15 +97,15 @@ class PriceStrikes extends Component {
             ...priceStrikes,
             key: priceStrike.id,
             name: priceStrike.member.name,
-            facebook: priceStrike.member.facebook,
+            facebook: `http://facebook.com/${priceStrike.member.facebook}`,
             created_at: priceStrike.created_at,
-            strikeNumber: priceStrike.strike_number,
+            strike_number: priceStrike.strike_number,
           }))}
         >
           <Column title="Date" dataIndex="created_at" key="created_at" />
           <Column title="Name" dataIndex="name" key="name" />
           <Column title="Facebook" dataIndex="facebook" key="facebook" />
-          <Column title="Strike Number" dataIndex="strikeNumber" key="strikeNumber" />
+          <Column title="Strike Number" dataIndex="strike_number" key="strike_number" />
         </Table>
       </div>
     );

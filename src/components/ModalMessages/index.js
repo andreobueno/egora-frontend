@@ -1,18 +1,4 @@
-import React, { Component } from 'react';
-import { Modal, Button } from 'antd';
-
-export function info() {
-  Modal.info({
-    title: 'This is a notification message',
-    content: (
-      <div>
-        <p>some messages...some messages...</p>
-        <p>some messages...some messages...</p>
-      </div>
-    ),
-    onOk() {},
-  });
-}
+import { Modal } from 'antd';
 
 export function success() {
   Modal.success({
@@ -24,13 +10,6 @@ export function success() {
 export function error() {
   Modal.error({
     title: 'ERROR',
-    content: 'Error inserting data.',
-  });
-}
-
-export function warning() {
-  Modal.warning({
-    title: 'This is a warning message',
-    content: 'some messages...some messages...',
+    content: 'Error inserting data. Please try again later.',
   });
 }

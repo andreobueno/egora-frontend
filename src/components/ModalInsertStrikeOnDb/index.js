@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 
 import { Modal, Input } from 'antd';
 
-class ModalInsertOnDb extends Component {
+class ModalInsertStrikeOnDb extends Component {
   state = {
     confirmLoading: false,
+    name: '',
   };
 
   render() {
-    const { confirmLoading } = this.state;
+    const { confirmLoading, name } = this.state;
     const {
       visible, closeModal, insertData, facebookLink,
     } = this.props;
@@ -17,13 +18,15 @@ class ModalInsertOnDb extends Component {
       <Modal
         title="Add new strike"
         visible={visible}
-        onOk={insertData}
+        onOk={() => {
+          insertData(name);
+        }}
         confirmLoading={confirmLoading}
         onCancel={closeModal}
       >
         <div style={{ marginBottom: 16 }}>
           Name:
-          <Input />
+          <Input value={name} onChange={e => this.setState({ name: e.target.value })} />
         </div>
         Facebook:
         <Input value={facebookLink} />
@@ -32,4 +35,4 @@ class ModalInsertOnDb extends Component {
   }
 }
 
-export default ModalInsertOnDb;
+export default ModalInsertStrikeOnDb;
