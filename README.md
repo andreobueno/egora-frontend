@@ -129,6 +129,8 @@ npm install --save styled-components
 
 npm install --save react react-copy-to-clipboard
 
+npm i -S prop-types
+
 yarn add axios
 
 sudo npm install --save react-router-dom
