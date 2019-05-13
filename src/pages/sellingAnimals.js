@@ -1,28 +1,24 @@
 import React, { Component } from 'react';
 import { Table, Button, Input } from 'antd';
-import api from '../../services/api';
+import api from '../services/api';
 
-import ModalInsertStrikeOnDb from '../../components/ModalInsertStrikeOnDb';
-import { success, error } from '../../components/ModalMessages';
+import ModalInsertStrikeOnDb from '../components/modalInsertStrikeOnDb';
+import { success, error } from '../components/modalMessages';
 
 const { Column } = Table;
 const { Search } = Input;
 
-class PriceStrikes extends Component {
+class SellingAnimals extends Component {
   state = {
     priceStrikes: [],
     visible: false,
     facebookLink: '',
+    name: '',
   };
 
   componentDidMount() {
     this.loadPriceStrikesList();
   }
-
-  //  loadMembersList = async () => {
-  //    const response = await api.get('/members');
-  //    this.setState({ members: response.data });
-  //  };
 
   loadPriceStrikesList = async () => {
     const response = await api.get('/priceStrikes');
@@ -33,52 +29,50 @@ class PriceStrikes extends Component {
     this.setState({ visible: true });
   };
 
-  modalOnCancel = () => {
+  onCloseModal = () => {
     this.setState({ visible: false });
   };
 
-  modalInsertOnDbInsertion = async (name) => {
-    const { facebookLink } = this.state;
+  changeName = (event) => {
+    this.setState({ name: event.target.value });
+  };
+
+  addStrike = async () => {
+    const { facebookLink, name } = this.state;
     try {
       await api.post('/priceStrikes', { name, facebookLink });
       success();
     } catch {
       error();
     }
-
-    // if (this.searchForFacebook()) {
-    //   console.log('TRUE!!!');
-    //   success();
-    // } else error();
     this.setState({ visible: false });
     this.loadPriceStrikesList();
   };
 
-  setFacebookLink = (e) => {
-    this.setState({ facebookLink: e.target.value });
-  };
-
-  searchForFacebook = async (link) => {
-    const response = await api.get(`/priceStrikes/${link}`);
-    this.setState({ priceStrikeSearchResult: response.data });
-    if (response.data.length > 0) {
-      console.log('I FOUND IT!!!');
-      return true;
+  searchForFacebook = async (e) => {
+    const facebookLink = e.target.value;
+    if (facebookLink !== '') {
+      const response = await api.get(`/priceStrikes/${facebookLink}`);
+      if (response.data !== null) {
+        this.setState({ priceStrikes: response.data });
+        this.loadPriceStrikesList();
+      }
     }
-    console.log('THERE IS NO ONE!!!');
-    return false;
+
+    // this.setState({ facebookLink: e.target.value });
   };
 
   render() {
-    const { priceStrikes, visible, facebookLink } = this.state;
+    const {
+      priceStrikes, visible, facebookLink, name,
+    } = this.state;
 
     return (
       <div>
         <Search
           placeholder="Type the Facebook link in here"
           enterButton
-          onSearch={value => this.searchForFacebook(value)}
-          onKeyUp={e => this.setFacebookLink(e)}
+          onChange={this.searchForFacebook}
         />
         <br />
         <br />
@@ -87,9 +81,11 @@ class PriceStrikes extends Component {
         </Button>
         <ModalInsertStrikeOnDb
           visible={visible}
-          insertData={this.modalInsertOnDbInsertion}
-          closeModal={this.modalOnCancel}
+          addStrike={this.addStrike}
+          closeModal={this.onCloseModal}
           facebookLink={facebookLink}
+          changeName={this.changeName}
+          name={name}
         />
         <hr />
         <Table
@@ -112,4 +108,4 @@ class PriceStrikes extends Component {
   }
 }
 
-export default PriceStrikes;
+export default SellingAnimals;

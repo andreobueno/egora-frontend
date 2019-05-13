@@ -1,43 +1,47 @@
 import React, { Component } from 'react';
 import { Modal, Input } from 'antd';
+import PropTypes from 'prop-types';
 
-import api from '../../services/api';
-import { success, error } from '../ModalMessages';
+import api from '../services/api';
+import { success, error } from './modalMessages';
 
 const { TextArea } = Input;
 
 class ModalInsertMessageOnDb extends Component {
+  static defaultProps = {
+    modalAddMessageVisibility: false,
+    closeModal: () => {},
+    loadMessages: () => {},
+  };
+
   state = {
-    confirmLoading: false,
     name: '',
     description: '',
   };
 
   modalInsertMessageOnDb = async (closeModal, loadMessages) => {
-    console.log('IM HERE');
     const { name, description } = this.state;
     try {
       await api.post('/messages', { name, description });
-      success();
+      success('Message Successfully inserted on DB');
     } catch {
-      error();
+      error('It was not possible to add this message. Please, try again later.');
     }
     closeModal();
     loadMessages();
   };
 
   render() {
-    const { confirmLoading, name, description } = this.state;
-    const { visible, closeModal, loadMessages } = this.props;
+    const { name, description } = this.state;
+    const { modalAddMessageVisibility, closeModal, loadMessages } = this.props;
 
     return (
       <Modal
         title="Add new Message"
-        visible={visible}
+        visible={modalAddMessageVisibility}
         onOk={(e) => {
           this.modalInsertMessageOnDb(closeModal, loadMessages, e);
         }}
-        confirmLoading={confirmLoading}
         onCancel={closeModal}
       >
         <div style={{ marginBottom: 16 }}>
@@ -54,5 +58,11 @@ class ModalInsertMessageOnDb extends Component {
     );
   }
 }
+
+ModalInsertMessageOnDb.propTypes = {
+  modalAddMessageVisibility: PropTypes.bool,
+  closeModal: PropTypes.func,
+  loadMessages: PropTypes.func,
+};
 
 export default ModalInsertMessageOnDb;

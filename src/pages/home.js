@@ -1,6 +1,5 @@
 import React from 'react';
-
-import agora from '../../assets/images/agora.jpg';
+import agora from '../assets/images/agora.jpg';
 
 const Home = () => (
   <div className="main-content home">
@@ -45,23 +44,18 @@ const Home = () => (
       on their behalf.
     </p>
     <p align="justify">
-      An "E-gora" is a virtual community that aims at recreating in the virtual world the extint
-      Agoras.
+      An
+      {' "E-gora" '}
+      is a virtual community that aims at recreating in the virtual world the extint Agoras.
     </p>
 
     <hr />
     <h3 align="center">
-      If you have any doubts, please, feel free to contact andre.obueno@dc.ufscar.br.
+      If you have any doubts, please, feel free to contact
+      <a style={{ border: 'none' }} href="mailto:andre.obueno@dc.ufscar.br">
+        andre.obueno@dc.ufscar.br.
+      </a>
     </h3>
-    {/* <h3>Featured Teachers</h3>
-         <Link to={"teachers/HTML/Tommy"} > Tommy Wingo </Link>
-        <Link to={"teachers/HTML/Tommy-Wingo"} > Tommy Wingo </Link>
-        <hr />
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" placeholder="Name" ref={(input) => this.name = input} />
-          <input type="text" placeholder="Topic" ref={(input) => this.topic = input} />
-          <button type="submit">Go!</button>
-        </form> --> */}
   </div>
 );
 

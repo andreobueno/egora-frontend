@@ -2,12 +2,12 @@ import React from 'react';
 
 import { Switch, Route } from 'react-router-dom';
 
-import Home from './pages/Home';
-import PriceStrikes from './pages/PriceStrikes';
-import NotFound from './pages/NotFound';
-import SellingAnimals from './pages/SellingAnimals';
-import NotRelatedToTheCity from './pages/NotRelatedToTheCity';
-import Messages from './pages/Messages';
+import Home from './pages/home';
+import PriceStrikes from './pages/priceStrikes';
+import NotFound from './pages/notFound';
+import SellingAnimals from './pages/sellingAnimals';
+import NotRelatedToTheCity from './pages/notRelatedToTheCity';
+import Messages from './pages/messages';
 
 const Routes = () => (
   <Switch>
