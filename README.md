@@ -135,6 +135,8 @@ npm i -S prop-types
 
 yarn add axios
 
+yarn add moment
+
 sudo npm install --save react-router-dom
 
 install editorconfig extension. Then, click on white space on the project tree and add editorconfig file
