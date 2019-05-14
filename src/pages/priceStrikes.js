@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import {
   Table, Button, Input, Icon,
 } from 'antd';
+import moment from 'moment';
 import api from '../services/api';
 
 import ModalInsertStrikeOnDb from '../components/modalInsertStrikeOnDb';
@@ -87,7 +88,7 @@ class PriceStrikes extends Component {
     const linkCut = link.slice(25);
     try {
       const response = await api.get(`/priceStrikes/${linkCut}`);
-      const { name, facebook } = response.data[0].member;
+      const { name, facebook } = response.data[0][0].member;
       const strikeNumber = response.data[1];
 
       if (Number(strikeNumber) < 2) {
@@ -151,7 +152,7 @@ class PriceStrikes extends Component {
             key: priceStrike.id,
             name: priceStrike.member.name,
             facebook: `https://www.facebook.com/${priceStrike.member.facebook}`,
-            created_at: priceStrike.created_at,
+            created_at: moment(priceStrike.created_at).format('MM/DD/YYYY'),
           }))}
         >
           <Column title="Date" dataIndex="created_at" key="created_at" />

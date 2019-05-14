@@ -8,6 +8,7 @@ import NotFound from './pages/notFound';
 import SellingAnimals from './pages/sellingAnimals';
 import NotRelatedToTheCity from './pages/notRelatedToTheCity';
 import Messages from './pages/messages';
+import RemovedMembers from './pages/removedMembers';
 
 const Routes = () => (
   <Switch>
@@ -16,6 +17,7 @@ const Routes = () => (
     <Route exact path="/priceStrikes" component={PriceStrikes} />
     <Route exact path="/sellingAnimals" component={SellingAnimals} />
     <Route exact path="/notRelatedToTheCity" component={NotRelatedToTheCity} />
+    <Route exact path="/removedMembers" component={RemovedMembers} />
     <Route component={NotFound} />
   </Switch>
 );

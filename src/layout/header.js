@@ -21,6 +21,9 @@ const Header = () => (
       <li>
         <NavLink to="/notRelatedTotheCity">Not Related to the City</NavLink>
       </li>
+      <li>
+        <NavLink to="/removedMembers">Removed Members</NavLink>
+      </li>
     </ul>
   </header>
 );
