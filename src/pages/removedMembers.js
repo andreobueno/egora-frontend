@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
+
 import {
   Table, Button, Input, Icon,
 } from 'antd';
@@ -10,6 +11,7 @@ import ModalInsertRemovalOnDb from '../components/modalInsertRemovalOnDb';
 import { success, error } from '../components/modalMessages';
 import { ActionButton } from './page_styles/removedMembers_Style';
 import { prepareFacebookLink } from '../utils/utils';
+import RemovalFor3StrikesMessage from '../components/RemovalFor3StrikesMessage';
 
 const { Column } = Table;
 const { Search } = Input;
@@ -49,6 +51,19 @@ class RemovedMembers extends Component {
     this.setState({ reason: value });
   };
 
+  handleRemoval = () => {
+    const { form } = this.formRef.props;
+    form.validateFields((err) => {
+      if (err) {
+        return;
+      }
+      this.addRemovedMember();
+      form.resetFields();
+    });
+  };
+
+  copyMessageToTransferArea = () => {};
+
   addRemovedMember = async () => {
     const returnDate = moment()
       .add(6, 'months')
@@ -62,9 +77,13 @@ class RemovedMembers extends Component {
         reason,
         returnDate,
       });
-      success();
+      if (reason === '3 Price Strikes') {
+        success(<RemovalFor3StrikesMessage state={this.state} returnDate={returnDate} />);
+      } else {
+        success(`${name} was successfully removed!`);
+      }
     } catch {
-      error();
+      error(`It was not possible to remove ${name}. Please, try again later.`);
     }
     this.setState({ visible: false });
     this.loadRemovedMembersList();
@@ -108,7 +127,7 @@ class RemovedMembers extends Component {
 
   render() {
     const {
-      removedMembers, visible, facebookLink, name, btnShowAllVisibility,
+      removedMembers, visible, facebookLink, btnShowAllVisibility,
     } = this.state;
 
     return (
@@ -136,7 +155,6 @@ class RemovedMembers extends Component {
           facebookLink={facebookLink}
           changeName={this.changeName}
           changeReason={this.changeReason}
-          name={name}
         />
         <hr />
         <Table
