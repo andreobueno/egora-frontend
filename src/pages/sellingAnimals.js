@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Table, Button, Input } from 'antd';
 import api from '../services/api';
 
-import ModalInsertStrikeOnDb from '../components/modalInsertStrikeOnDb';
+import ModalInsertStrikeOnDb from '../components/ModalInsertStrikeOnDb';
 import { success, error } from '../components/modalMessages';
 
 const { Column } = Table;

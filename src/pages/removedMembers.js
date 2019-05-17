@@ -75,7 +75,7 @@ class RemovedMembers extends Component {
         name,
         facebook,
         reason,
-        returnDate,
+        return_at: returnDate,
       });
       if (reason === '3 Price Strikes') {
         success(<RemovalFor3StrikesMessage state={this.state} returnDate={returnDate} />);

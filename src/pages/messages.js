@@ -3,7 +3,7 @@ import { Table, Button, Icon } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import api from '../services/api';
 
-import ModalInsertMessageOnDb from '../components/modalInsertMessageOnDb';
+import ModalInsertMessageOnDb from '../components/ModalInsertMessageOnDb';
 import { success, error } from '../components/modalMessages';
 import ModalEditMessage from '../components/modalEditMessage';
 import { ActionButton } from './page_styles/messages_Style';

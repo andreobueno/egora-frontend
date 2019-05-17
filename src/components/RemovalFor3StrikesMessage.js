@@ -24,9 +24,13 @@ was successfully removed!
         The removal message will be copied to the transfer area once you click on the Ok button.
       </div>
       <CopyToClipboard text={threeStrikeRemovalMessage}>
-        <Button>
-          <Icon type="copy" style={{ color: '#1890ff' }} />
-        </Button>
+        <div style={{ marginTop: '12px' }}>
+          <Button>
+            Copy
+            {' '}
+            <Icon type="copy" style={{ color: '#1890ff' }} />
+          </Button>
+        </div>
       </CopyToClipboard>
     </div>
   );

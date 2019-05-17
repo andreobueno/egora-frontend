@@ -6,8 +6,10 @@ import {
 import moment from 'moment';
 import api from '../services/api';
 
-import ModalInsertStrikeOnDb from '../components/modalInsertStrikeOnDb';
+import ModalInsertStrikeOnDb from '../components/ModalInsertStrikeOnDb';
 import { success, error } from '../components/modalMessages';
+import Modal3StrikesToRemove from '../components/Modal3StrikesToRemove';
+import RemovalFor3StrikesMessage from '../components/RemovalFor3StrikesMessage';
 import { ActionButton } from './page_styles/priceStrike_Style';
 import { prepareFacebookLink } from '../utils/utils';
 
@@ -17,7 +19,8 @@ const { Search } = Input;
 class PriceStrikes extends Component {
   state = {
     priceStrikes: [],
-    visible: false,
+    addStrikeVisible: false,
+    threeStrikeModalvisible: false,
     facebookLink: '',
     name: '',
     btnShowAllVisibility: true,
@@ -32,12 +35,25 @@ class PriceStrikes extends Component {
     this.setState({ priceStrikes: response.data, btnShowAllVisibility: true, facebookLink: '' });
   };
 
-  showModal = () => {
-    this.setState({ visible: true });
+  loadPriceStrikesListAfterIncrease = async () => {
+    const response = await api.get('/priceStrikes');
+    this.setState({ priceStrikes: response.data, btnShowAllVisibility: true });
   };
 
-  hideModal = () => {
-    this.setState({ visible: false });
+  showAddStrikeModal = () => {
+    this.setState({ addStrikeVisible: true });
+  };
+
+  show3StrikeRemoval = () => {
+    this.setState({ threeStrikeModalvisible: true });
+  };
+
+  hideAddStrikeModal = () => {
+    this.setState({ addStrikeVisible: false });
+  };
+
+  hide3StrikeRemoval = () => {
+    this.setState({ threeStrikeModalvisible: false });
   };
 
   changeName = (event) => {
@@ -53,7 +69,29 @@ class PriceStrikes extends Component {
     } catch {
       error();
     }
-    this.setState({ visible: false });
+    this.setState({ addStrikeVisible: false });
+    this.loadPriceStrikesList();
+  };
+
+  addRemoval = async () => {
+    const returnDate = moment()
+      .add(6, 'months')
+      .format('YYYY-MM-DD');
+    const { name, facebookLink } = this.state;
+    const reason = '3 Price Strikes';
+    try {
+      await api.post('/priceStrikes', { name, facebook: facebookLink });
+      await api.post('/removedMembers', {
+        name,
+        facebook: facebookLink,
+        reason,
+        return_at: returnDate,
+      });
+      success(<RemovalFor3StrikesMessage state={this.state} returnDate={returnDate} />);
+    } catch {
+      error(`It was not possible to add a new strike for ${name}. Please, try again later.`);
+    }
+    this.setState({ threeStrikeModalvisible: false });
     this.loadPriceStrikesList();
   };
 
@@ -73,7 +111,7 @@ class PriceStrikes extends Component {
           return true;
         }
         this.setState({ facebookLink: linkReadyToGo });
-        this.showModal();
+        this.showAddStrikeModal();
         return false;
       } catch {
         error(
@@ -89,6 +127,7 @@ class PriceStrikes extends Component {
     try {
       const response = await api.get(`/priceStrikes/${linkCut}`);
       const { name, facebook } = response.data[0][0].member;
+      this.setState({ name, facebookLink: facebook });
       const strikeNumber = response.data[1];
 
       if (Number(strikeNumber) < 2) {
@@ -99,13 +138,13 @@ class PriceStrikes extends Component {
           error('It was not possible to add the strike to this member. Please, try again later.');
         }
       } else {
-        console.log('3 STRIKES - REMOVE THIS MEMBER!!!');
+        this.show3StrikeRemoval();
       }
     } catch {
       error('It was not possible to find the strikes for this member. Please, try again later.');
     }
 
-    this.loadPriceStrikesList();
+    this.loadPriceStrikesListAfterIncrease();
   };
 
   decreaseStrike = async (id) => {
@@ -120,7 +159,12 @@ class PriceStrikes extends Component {
 
   render() {
     const {
-      priceStrikes, visible, facebookLink, name, btnShowAllVisibility,
+      priceStrikes,
+      addStrikeVisible,
+      threeStrikeModalvisible,
+      facebookLink,
+      name,
+      btnShowAllVisibility,
     } = this.state;
 
     return (
@@ -138,12 +182,17 @@ class PriceStrikes extends Component {
           Show All Strikes
         </Button>
         <ModalInsertStrikeOnDb
-          visible={visible}
+          visible={addStrikeVisible}
           addStrike={this.addStrike}
-          closeModal={this.hideModal}
+          closeModal={this.hideAddStrikeModal}
           facebookLink={facebookLink}
           changeName={this.changeName}
           name={name}
+        />
+        <Modal3StrikesToRemove
+          visible={threeStrikeModalvisible}
+          addRemoval={this.addRemoval}
+          closeModal={this.hide3StrikeRemoval}
         />
         <hr />
         <Table

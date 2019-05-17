@@ -65,4 +65,11 @@ ModalInsertMessageOnDb.propTypes = {
   loadMessages: PropTypes.func,
 };
 
+ModalInsertMessageOnDb.defaultProps = {
+  visible: false,
+  modalAddMessageVisibility: () => {},
+  closeModal: () => {},
+  loadMessages: () => {},
+};
+
 export default ModalInsertMessageOnDb;
